@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'https://challenge-api.ivy.homes';
+const API_BASE = 'https://solve.ivy.homes';
 
 const api = axios.create({
   baseURL: API_BASE,

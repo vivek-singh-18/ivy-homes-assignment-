@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const activeApiKey = apiKey || import.meta.env.VITE_IVY_API_KEY;
-      const res = await axios.post('https://challenge-api.ivy.homes/auth/login', {
+      const res = await axios.post('https://solve.ivy.homes/auth/login', {
         email, password
       }, {
         headers: { 'X-API-Key': activeApiKey }
