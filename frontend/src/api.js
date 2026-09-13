@@ -1,11 +1,6 @@
 import axios from 'axios';
 
 const API_BASE = 'https://challenge-api.ivy.homes';
-// Make sure to use the env var for API key, or we can hardcode for this assignment since it's a fixed demo key.
-// But the instructions said: "Do not expose my API key or password in source code". 
-// Wait! If it's a React frontend, the API key would be exposed to the client!
-// The instructions said "Use environment variables from .env. Never commit .env."
-// In Vite, it must be VITE_API_KEY. I will create a .env in the frontend folder, or use the root .env.
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -16,8 +11,13 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
-  // Inject API key
-  config.headers['X-API-Key'] = import.meta.env.VITE_IVY_API_KEY;
+  
+  // Use locally stored API key, fallback to env (which will be undefined in public build)
+  const apiKey = localStorage.getItem('ivy_api_key') || import.meta.env.VITE_IVY_API_KEY;
+  if (apiKey) {
+    config.headers['X-API-Key'] = apiKey;
+  }
+  
   return config;
 });
 
@@ -58,15 +58,16 @@ api.interceptors.response.use(
       const refreshToken = localStorage.getItem('refresh_token');
       if (!refreshToken) {
         localStorage.removeItem('access_token');
-        window.location.href = '/login';
+        window.location.href = '#/login';
         return Promise.reject(error);
       }
 
       try {
+        const apiKey = localStorage.getItem('ivy_api_key') || import.meta.env.VITE_IVY_API_KEY;
         const { data } = await axios.post(`${API_BASE}/auth/refresh`, {
           refresh_token: refreshToken
         }, {
-          headers: { 'X-API-Key': import.meta.env.VITE_IVY_API_KEY }
+          headers: { 'X-API-Key': apiKey }
         });
         
         localStorage.setItem('access_token', data.access_token);
@@ -82,7 +83,7 @@ api.interceptors.response.use(
         processQueue(err, null);
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        window.location.href = '/login';
+        window.location.href = '#/login';
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

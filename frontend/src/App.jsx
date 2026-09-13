@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Listings from './pages/Listings';
 import ListingDetail from './pages/ListingDetail';
@@ -20,7 +20,7 @@ function Layout({ children }) {
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
       {token && (
-        <nav className="bg-white shadow-md p-4 flex gap-4 items-center">
+        <nav className="bg-white shadow-md p-4 flex flex-wrap gap-4 items-center">
           <Link to="/" className="font-bold text-xl text-blue-600">Ivy Homes</Link>
           <Link to="/" className="hover:text-blue-500">Listings</Link>
           <Link to="/rentals" className="hover:text-blue-500">Rentals</Link>
@@ -32,7 +32,7 @@ function Layout({ children }) {
           </div>
         </nav>
       )}
-      <div className="p-6">{children}</div>
+      <div className="p-4 md:p-6">{children}</div>
     </div>
   );
 }
