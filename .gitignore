@@ -1,0 +1,7 @@
+.env
+node_modules
+.next
+
+statement.md
+API_REFERENCE.md
+submission.template.json
