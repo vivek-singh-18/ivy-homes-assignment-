@@ -12,13 +12,14 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${PROXY_BASE}/api/proxy?path=/auth/login`, {
+      const res = await axios.post(`${PROXY_BASE}/api/proxy`, {
         email, password
+      }, {
+        headers: { 'X-Target-Path': '/auth/login' }
       });
       
       localStorage.setItem('access_token', res.data.access_token);
       localStorage.setItem('refresh_token', res.data.refresh_token);
-      // Removed apiKey from localStorage entirely.
       localStorage.removeItem('ivy_api_key');
       navigate('/');
     } catch (err) {

@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 // IMPORTANT: Replace this with your actual deployed Vercel URL
-export const PROXY_BASE = 'https://YOUR_VERCEL_PROJECT_URL.vercel.app';
+export const PROXY_BASE = 'https://ivy-homes-assignment-snowy.vercel.app';
 
 const api = axios.create({
-  baseURL: `${PROXY_BASE}/api/proxy?path=`,
+  baseURL: `${PROXY_BASE}/api/proxy`,
 });
 
 api.interceptors.request.use((config) => {
@@ -12,6 +12,13 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
+  // Store the target URL in a custom header so the proxy knows where to route
+  // Combine baseURL and url only if the url isn't already absolute
+  let targetPath = config.url;
+  config.headers['X-Target-Path'] = targetPath;
+  
+  // We want to send it to the proxy base URL ALWAYS
+  config.url = '';
   return config;
 });
 
@@ -57,8 +64,12 @@ api.interceptors.response.use(
       }
 
       try {
-        const { data } = await axios.post(`${PROXY_BASE}/api/proxy?path=/auth/refresh`, {
+        const { data } = await axios.post(`${PROXY_BASE}/api/proxy`, {
           refresh_token: refreshToken
+        }, {
+          headers: {
+            'X-Target-Path': '/auth/refresh'
+          }
         });
         
         localStorage.setItem('access_token', data.access_token);
