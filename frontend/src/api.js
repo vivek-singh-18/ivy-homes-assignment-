@@ -1,9 +1,10 @@
 import axios from 'axios';
 
-const API_BASE = 'https://solve.ivy.homes';
+// IMPORTANT: Replace this with your actual deployed Vercel URL
+export const PROXY_BASE = 'https://YOUR_VERCEL_PROJECT_URL.vercel.app';
 
 const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: `${PROXY_BASE}/api/proxy?path=`,
 });
 
 api.interceptors.request.use((config) => {
@@ -11,13 +12,6 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
-  
-  // Use locally stored API key, fallback to env (which will be undefined in public build)
-  const apiKey = localStorage.getItem('ivy_api_key') || import.meta.env.VITE_IVY_API_KEY;
-  if (apiKey) {
-    config.headers['X-API-Key'] = apiKey;
-  }
-  
   return config;
 });
 
@@ -63,11 +57,8 @@ api.interceptors.response.use(
       }
 
       try {
-        const apiKey = localStorage.getItem('ivy_api_key') || import.meta.env.VITE_IVY_API_KEY;
-        const { data } = await axios.post(`${API_BASE}/auth/refresh`, {
+        const { data } = await axios.post(`${PROXY_BASE}/api/proxy?path=/auth/refresh`, {
           refresh_token: refreshToken
-        }, {
-          headers: { 'X-API-Key': apiKey }
         });
         
         localStorage.setItem('access_token', data.access_token);
