@@ -10,15 +10,15 @@ export default function Listings() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!localStorage.getItem('access_token')) navigate('/login');
+    if(!localStorage.getItem('access_token')) return navigate('/login');
     fetchListings(0);
   }, []);
 
   const fetchListings = async (p) => {
     try {
       const res = await api.get(`/v1/listings?offset=${p * limit}&limit=${limit}`);
-      const activeListings = res.data.listings.filter(l => l.is_live);
-      if (res.data.listings.length < limit) setHasMore(false);
+      const activeListings = res.data.results.filter(l => l.is_live);
+      if (res.data.results.length < limit) setHasMore(false);
       
       setListings(prev => p === 0 ? activeListings : [...prev, ...activeListings]);
     } catch (err) {

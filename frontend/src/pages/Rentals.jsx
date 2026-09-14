@@ -5,7 +5,7 @@ export default function Rentals() {
   const [rentals, setRentals] = useState([]);
 
   useEffect(() => {
-    api.get(`/v1/rentals?limit=50`).then(res => setRentals(res.data.rentals));
+    api.get(`/v1/rentals?limit=50`).then(res => setRentals(res.data.results));
   }, []);
 
   return (
