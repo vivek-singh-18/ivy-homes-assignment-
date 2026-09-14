@@ -31,7 +31,6 @@ This assignment was completed end-to-end autonomously by an advanced LLM coding 
 ## Running the Frontend
 1. Navigate to the `frontend` directory.
 2. Run `npm install`.
-3. Create a `.env` file containing `VITE_IVY_API_KEY=IVY26-AEC873EFB13C` and `VITE_DEMO_PASSWORD=31d4e26d65`.
 4. Run `npm run dev` to start the local development server.
 
 ## Submission Details
